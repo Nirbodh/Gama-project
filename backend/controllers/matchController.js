@@ -1,9 +1,9 @@
 const Match = require('../models/Match');
 const User = require('../models/User');
 
-// @desc    Create a match
-// @route   POST /api/matches
-// @access  Private
+// ===============================
+// CREATE MATCH
+// ===============================
 const createMatch = async (req, res) => {
   try {
     const {
@@ -18,11 +18,14 @@ const createMatch = async (req, res) => {
       rules
     } = req.body;
 
-    // For normal matches, check if user has sufficient balance for entry fee
-    if (type === 'normal') {
-      const user = await User.findById(req.user._id);
-      if (user.walletBalance < entryFee) {
-        return res.status(400).json({ message: 'Insufficient balance to create match' });
+    // Prize pool validation only if entry fee > 0
+    if (entryFee > 0) {
+      const expectedEarnings = entryFee * maxParticipants;
+
+      if (prizePool > expectedEarnings * 0.9) {
+        return res.status(400).json({
+          message: 'Prize pool too high for the entry fee and participants'
+        });
       }
     }
 
@@ -46,9 +49,10 @@ const createMatch = async (req, res) => {
   }
 };
 
-// @desc    Get all matches
-// @route   GET /api/matches
-// @access  Public
+
+// ===============================
+// GET MATCHES
+// ===============================
 const getMatches = async (req, res) => {
   try {
     const { status, type } = req.query;
@@ -57,9 +61,11 @@ const getMatches = async (req, res) => {
     if (status) filter.status = status;
     if (type) filter.type = type;
 
-    // Non-admin users only see approved matches
     if (!req.user || req.user.role !== 'admin') {
-      filter.status = 'approved';
+      filter.$or = [
+        { status: 'approved' },
+        { createdBy: req.user?._id } // user should see their own pending matches
+      ];
     }
 
     const matches = await Match.find(filter)
@@ -74,17 +80,16 @@ const getMatches = async (req, res) => {
   }
 };
 
-// @desc    Join a match
-// @route   POST /api/matches/:id/join
-// @access  Private
+
+// ===============================
+// JOIN MATCH
+// ===============================
 const joinMatch = async (req, res) => {
   try {
     const match = await Match.findById(req.params.id);
     const user = await User.findById(req.user._id);
 
-    if (!match) {
-      return res.status(404).json({ message: 'Match not found' });
-    }
+    if (!match) return res.status(404).json({ message: 'Match not found' });
 
     if (match.status !== 'approved') {
       return res.status(400).json({ message: 'Match is not available for joining' });
@@ -94,18 +99,19 @@ const joinMatch = async (req, res) => {
       return res.status(400).json({ message: 'Match is full' });
     }
 
-    // Check if user already joined
     const alreadyJoined = match.participants.some(
-      participant => participant.user.toString() === req.user._id.toString()
+      p => p.user.toString() === req.user._id.toString()
     );
-
     if (alreadyJoined) {
       return res.status(400).json({ message: 'Already joined this match' });
     }
 
-    // Check wallet balance
+    if (match.createdBy.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: 'Cannot join your own match' });
+    }
+
     if (user.walletBalance < match.entryFee) {
-      return res.status(400).json({ message: 'Insufficient balance' });
+      return res.status(400).json({ message: 'Insufficient balance to join match' });
     }
 
     // Deduct entry fee
@@ -119,14 +125,16 @@ const joinMatch = async (req, res) => {
     await match.save();
 
     res.json({ message: 'Successfully joined the match', match });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// @desc    Submit match result
-// @route   POST /api/matches/:id/submit-result
-// @access  Private
+
+// ===============================
+// SUBMIT RESULT
+// ===============================
 const submitResult = async (req, res) => {
   try {
     const { screenshot } = req.body;
@@ -136,9 +144,8 @@ const submitResult = async (req, res) => {
       return res.status(404).json({ message: 'Match not found' });
     }
 
-    // Check if user is participant
     const isParticipant = match.participants.some(
-      participant => participant.user.toString() === req.user._id.toString()
+      p => p.user.toString() === req.user._id.toString()
     );
 
     if (!isParticipant) {
@@ -146,18 +153,22 @@ const submitResult = async (req, res) => {
     }
 
     match.screenshot = screenshot;
-    match.status = 'finished';
+    match.submittedBy = req.user._id;
+    match.status = 'result-submitted'; // IMPORTANT CHANGE
+
     await match.save();
 
     res.json({ message: 'Result submitted successfully', match });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// @desc    Approve match (Admin only)
-// @route   PUT /api/matches/:id/approve
-// @access  Private/Admin
+
+// ===============================
+// APPROVE MATCH (ADMIN)
+// ===============================
 const approveMatch = async (req, res) => {
   try {
     const match = await Match.findById(req.params.id);
@@ -170,15 +181,17 @@ const approveMatch = async (req, res) => {
     await match.save();
 
     res.json({ message: 'Match approved successfully', match });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 module.exports = {
   createMatch,
   getMatches,
   joinMatch,
   submitResult,
-  approveMatch,
+  approveMatch
 };

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wallet"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/tvBalance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Balance: ৳0.00"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp" />
+
+    <!-- Deposit Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deposit Money"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/etDepositAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Amount"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etDepositTransactionId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="bKash Transaction ID"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnDeposit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Request Deposit"
+        android:layout_marginBottom="30dp" />
+
+    <!-- Withdrawal Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Withdraw Money"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/etWithdrawAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Amount"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etWithdrawTransactionId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="bKash Transaction ID"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnWithdraw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Request Withdrawal" />
+
+</LinearLayout>

@@ -5,14 +5,12 @@ plugins {
 
 android {
     namespace = "com.gama.gama"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36  // Upgrade to 36
 
     defaultConfig {
         applicationId = "com.gama.gama"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 36  // Upgrade to 36
         versionCode = 1
         versionName = "1.0"
 
@@ -28,6 +26,11 @@ android {
             )
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -46,4 +49,22 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Retrofit and networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // DataStore and Coroutines
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Lifecycle and Navigation
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
+
+    //new
+    implementation("androidx.cardview:cardview:1.0.0")
 }

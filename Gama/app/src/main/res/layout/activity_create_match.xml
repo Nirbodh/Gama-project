@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Match"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="30dp" />
+
+        <!-- Fixed height for proper touch target -->
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Match Title"
+            android:minHeight="60dp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etDescription"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:hint="Description"
+            android:minHeight="120dp"
+            android:padding="16dp"
+            android:gravity="top"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etGameType"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Game Type (e.g., PUBG, Free Fire)"
+            android:minHeight="60dp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etEntryFee"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Entry Fee"
+            android:inputType="numberDecimal"
+            android:minHeight="60dp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etPrizePool"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Prize Pool"
+            android:inputType="numberDecimal"
+            android:minHeight="60dp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etMaxParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Max Participants"
+            android:inputType="number"
+            android:minHeight="60dp"
+            android:padding="16dp"
+            android:layout_marginBottom="30dp" />
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Create Match"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</ScrollView>
